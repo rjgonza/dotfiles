@@ -67,6 +67,18 @@ xterm*|rxvt*)
     ;;
 esac
 
+# Adding git branch to PS1
+function parse_git_branch () {
+       git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+RED="\[\033[0;31m\]"
+YELLOW="\[\033[0;33m\]"
+GREEN="\[\033[0;32m\]"
+NO_COLOR="\[\033[0m\]"
+
+PS1="$NO_COLOR\u@$(hostname)$NO_COLOR:\w$YELLOW\$(parse_git_branch)$NO_COLOR\$ "
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -118,8 +130,6 @@ function slash_and_burn(){
         git branch -r | grep -q $i || git branch -d $i;
     done
 }
-
-alias ls='ls --color=auto'
 
 export TERM=xterm
 export EDITOR=vim

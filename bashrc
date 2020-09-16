@@ -111,6 +111,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
+function slash_and_burn(){
+    git pull
+    git fetch -p
+    for i in $(git branch|awk '{print $NF}'); do
+        git branch -r | grep -q $i || git branch -d $i;
+    done
+}
+
 alias ls='ls --color=auto'
 
 export TERM=xterm

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-configs="bashrc tmux.conf .ssh/config"
+configs=".bashrc .tmux.conf ..ssh/config"
 
 for config in $configs; do
-    configFilename=$(echo ./${config})
-    cp $config ~/${configFilename}
-    chmod 400 ~/${configFilename}
+    cp ${config#.} ~/.${config##*.}
 done
+
+chmod 600 ~/.ssh/config

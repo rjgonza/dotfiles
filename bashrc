@@ -110,3 +110,29 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+alias ls='ls --color=auto'
+
+export TERM=xterm
+export EDITOR=vim
+alias cptmux='tmux showb | xclip'
+alias ptmux='xclip -o'
+
+
+SSH_ENV="$HOME/.ssh/agent-environment"
+function start_agent(){
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}" && echo "Succeeded starting a new ssh-agent!"
+    chmod 600 "${SSH_ENV}"
+    source "${SSH_ENV}"
+    /usr/bin/ssh-add
+}
+
+if [[ -f "${SSH_ENV}" ]]; then
+    source "${SSH_ENV}"
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent
+fi
